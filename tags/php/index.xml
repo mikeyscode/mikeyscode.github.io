@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>php on Home</title>
+    <link>https://mikey.uk/tags/php/</link>
+    <description>Home (php)</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Tue, 23 Jan 2018 14:42:03 +0000</lastBuildDate>
+    
+    <atom:link href="https://mikey.uk/tags/php/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Redis Pipelines</title>
+      <link>https://mikey.uk/posts/redis-pipelines/</link>
+      <pubDate>Tue, 23 Jan 2018 14:42:03 +0000</pubDate>
+      
+      <guid>https://mikey.uk/posts/redis-pipelines/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://upload.wikimedia.org/wikipedia/en/thumb/6/6b/Redis_Logo.svg/1280px-Redis_Logo.svg.png&#34; alt=&#34;Redis logo&#34; title=&#34;Redis&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;what-are-pipelines&#34;&gt;What are Pipelines?&lt;/h2&gt;
+&lt;p&gt;At the very basic level Redis Pipelines allow us to send multiple commands to our server, have them executed and then read all the replies. If you are wondering why that’s different to how it normally works, think of it this way:&lt;/p&gt;
+&lt;p&gt;We have a bridge, on one side of the bridge is all the commands we want to run. Our helper memorises a single command, carries it across the bridge and executes it. He then comes back across the bridge and tells us the result of the command.&lt;/p&gt;
+&lt;p&gt;Now that’s all well and good if we have a single or even a few commands, our helper is a pretty fast runner so we get the results from our commands pretty quick, but what if we have hundreds, thousands or even millions of commands?&lt;/p&gt;
+&lt;p&gt;Well let&#39;s teach our helper about Pipelines. This time rather than memorising one command and crossing the bridge, he’s going to memorise them all first, then cross the bridge and execute them all together, one after the other. Then he’s going to return with a list of all the results when he’s done.&lt;/p&gt;
+&lt;p&gt;In Redis terms every time we crossed the bridge we had to connect to Redis again. So you can imagine how much faster only crossing the bridge once is against hundred or even a thousand times.&lt;/p&gt;
+&lt;p&gt;The keen eyed ones among you may have spotted something about Pipelines though, our helper is having to store in memory a lot of commands, as the amount of commands increases so does the load on our helper&#39;s brain. So what can we do to reduce that?&lt;/p&gt;
+&lt;p&gt;Well depending on how good your helper is and how much he can store at once we can try and limit the amount of commands he has to remember through batching. Rather than sending all our requests in one go, we can send across 250 at a time. This’ll still be faster than our original method of one at a time, but limit the amount of memory our helper needs.&lt;/p&gt;
+&lt;h2 id=&#34;so-how-do-you-implement-pipelines&#34;&gt;So how do you implement Pipelines?&lt;/h2&gt;
+&lt;p&gt;Well it will vary depending on your implementation and language of choice but below I’ll demonstrate a simple example utilising &lt;a href=&#34;https://github.com/phpredis/phpredis&#34;&gt;phpredis&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In our basic example we have a Book class which has a cache method. This method takes in an array of books that we loop through and store in redis as hashes. You will notice I haven’t implemented batching for this example, I&#39;ll leave that for you to figure out.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;?php&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Book&lt;/span&gt;
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;REDIS_NAMESPACE&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;library:books&amp;#39;&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;DEFAULT_TTL&lt;/span&gt; 	  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;14400&lt;/span&gt;;
+	
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;cache&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;array&lt;/span&gt; $books)
+    {
+        $redis    &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Redis&lt;/span&gt;();
+        $pipeline &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; $redis&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;multi&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;Redis&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;PIPELINE&lt;/span&gt;);
+
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; ($books &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; $book) {
+            $bookNamespace &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sprintf&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;%s:%s&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;REDIS_NAMESPACE&lt;/span&gt;, $book&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;);
+            $pipeline&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;hMSet&lt;/span&gt;($bookNamespace, [
+                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;id&amp;#39;&lt;/span&gt; 		 &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; $book&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;,
+                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;title&amp;#39;&lt;/span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; $book&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;title&lt;/span&gt;,
+                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;returnDate&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; $book&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;returnDate&lt;/span&gt;
+            ]);
+
+            $pipeline&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;expire&lt;/span&gt;($bookNamespace, &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;DEFAULT_TTL&lt;/span&gt;);
+        }
+
+        $pipeline&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;exec&lt;/span&gt;();	
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So lets go over the key things we are doing here:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;$pipeline = $redis-&amp;gt;multi(Redis::PIPELINE);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;First we start out by creating our Pipeline, in phpredis to do this we just call &lt;code&gt;-&amp;gt;multi()&lt;/code&gt; and pass through the pipeline constant. This will create a handle for us that we can execute our commands on.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;$pipeline-&amp;gt;hMSet($bookNamespace, [
+    &amp;#39;id&amp;#39;         =&amp;gt; $book-&amp;gt;id,
+    &amp;#39;title&amp;#39;      =&amp;gt; $book-&amp;gt;title,
+    &amp;#39;returnDate&amp;#39; =&amp;gt; $book-&amp;gt;returnDate
+]);
+
+$pipeline-&amp;gt;expire($bookNamespace, self::DEFAULT_TTL);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we have our pipeline created we can throw commands at it, so that&#39;s exactly what we do. While looping through each of our books we add a &lt;code&gt;-&amp;gt;hMSet()&lt;/code&gt; and an &lt;code&gt;-&amp;gt;expire()&lt;/code&gt; command to our pipeline, this stores the commands and all the information they need to execute up until the next step.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;$pipeline-&amp;gt;exec();
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now our pipeline has a bunch of commands that we want to execute, so all we have to do is call &lt;code&gt;exec()&lt;/code&gt; and it will start firing through the commands in a queue system (first in, first out).&lt;/p&gt;
+&lt;p&gt;And that is all there is to it, we do not have any commands that will return any useful information so we do not need to do anything with the result from &lt;code&gt;exec()&lt;/code&gt;. If you were however retreiving rather than than setting, you would access your results like so: &lt;code&gt;$results = $pipeline-&amp;gt;exec();&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This is just a basic introduction to Redis Pipelines, there is a lot more to them than I&#39;ve covered here so I highly encourage you read the redis.io topic to further your knowledge on them because they are a fundamental tool in day to day Redis operation: &lt;a href=&#34;https://redis.io/topics/pipelining&#34;&gt;https://redis.io/topics/pipelining&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

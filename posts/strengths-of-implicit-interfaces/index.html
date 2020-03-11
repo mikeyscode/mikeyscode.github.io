@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+        
+<meta charset="utf-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+
+<title>Strengths of Implicit Interfaces  - Home</title>
+<meta name="description" content="Manchester based Software Developer">
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="https://mikey.uk/rss/">
+
+<link rel="icon" type="image/x-icon" href="https://mikey.uk/favicon.ico">
+<link rel="apple-touch-icon-precomposed" href="https://mikey.uk/favicon.png">
+
+<link rel="stylesheet" href="https://mikey.uk/css/style.css?rnd=1583825312" />
+
+<meta property="og:title" content="Strengths of Implicit Interfaces" />
+<meta property="og:description" content="Implicit interfaces are a language feature that I have found myself coming to love more and more as I use them. For the uninitiated I have put a quick comparison below of explicity and implicit interfaces based on the languages PHP and Go respectively (and yes it is with the age old example of an animal).
+Explicit Interface &lt;?php // Animal.php interface Animal { public function Speak(): string; public function Walk(); } // Dog." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mikey.uk/posts/strengths-of-implicit-interfaces/" />
+<meta property="article:published_time" content="2020-03-10T06:43:03+00:00" />
+<meta property="article:modified_time" content="2020-03-10T06:43:03+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Strengths of Implicit Interfaces"/>
+<meta name="twitter:description" content="Implicit interfaces are a language feature that I have found myself coming to love more and more as I use them. For the uninitiated I have put a quick comparison below of explicity and implicit interfaces based on the languages PHP and Go respectively (and yes it is with the age old example of an animal).
+Explicit Interface &lt;?php // Animal.php interface Animal { public function Speak(): string; public function Walk(); } // Dog."/>
+
+
+
+
+
+
+    
+</head>
+<body>
+    <div class="container">
+        <header> 
+            
+                <h1 class="site-header">
+    <a href="https://mikey.uk/">Home</a>
+</h1>
+<nav>
+    
+    
+    <a class="" href="/about/" title="">About</a>
+    
+    <a class="" href="/tags/" title="">Tags</a>
+    
+    <a class="" href="/posts/" title="">Archive</a>
+    
+</nav>
+
+            
+        </header>
+        <main>
+            
+
+    <article class="post">
+        <header>
+            <h1>Strengths of Implicit Interfaces</h1>
+        </header>
+        <div class="content">
+            <p>Implicit interfaces are a language feature that I have found myself coming to love more and more as I use them. For the uninitiated I have put a quick comparison below of explicity and implicit interfaces based on the languages PHP and Go respectively (and yes it is with the age old example of an animal).</p>
+<h2 id="explicit-interface">Explicit Interface</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#75715e">// Animal.php
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">Animal</span> {
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Speak</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">string</span>;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Walk</span>();
+}
+
+<span style="color:#75715e">// Dog.php
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Dog</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">Animal</span> {
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Speak</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">string</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Woof!&#34;</span>
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Walk</span>() {
+        <span style="color:#75715e">// Some logic
+</span><span style="color:#75715e"></span>    }
+}
+</code></pre></div><p>The above example is explicit as our Dog class had to <em>explicitly</em> state that it was implementing the Animal interface. We would also get run time errors if the Dog failed to meet the contract set out by the Animal interface.</p>
+<h2 id="implicit-interface">Implicit Interface</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Speaker</span> <span style="color:#66d9ef">interface</span> {
+    <span style="color:#a6e22e">Speak</span>() <span style="color:#66d9ef">string</span>
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Walker</span> <span style="color:#66d9ef">interface</span> {
+    <span style="color:#a6e22e">Walk</span>()
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Dog</span> <span style="color:#66d9ef">struct</span> {}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">Dog</span>) <span style="color:#a6e22e">Speak</span>() <span style="color:#66d9ef">string</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Woof!&#34;</span>
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">Dog</span>) <span style="color:#a6e22e">Walk</span>() {
+    <span style="color:#75715e">// Logic
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>And now we have our implicit interface, our Dog struct does not need to state it is implementing either of our interfaces instead Go will work this out during compliation if the Dog struct implements the necessary methods to implement either interface.</p>
+<h2 id="so-why-implicit">So Why Implicit?</h2>
+<p>If you studied the two examples above you probably noticed a two main points:</p>
+<ul>
+<li>In the implicit example I used two interfaces rather than one.</li>
+<li>There is no reference to &ldquo;Animal&rdquo; in the implicit example.</li>
+</ul>
+<p>So why did I format it different, couldn't I do the same with an explicit interface? The answer is yes I could, and you could then explicitly state on every class that implements the interfaces what it conforms to but that's a lot of work and cognitive load when using that form of interface.</p>
+<p>After seeing a hundred different animal interface examples on the internet over the years you can probably guess why we may want to have slimmer interfaces. If not imagine the interfaces in both examples and how they would work for the following:</p>
+<ul>
+<li>Cat</li>
+<li>Falcon</li>
+<li>Shark</li>
+<li>Human</li>
+</ul>
+<p>First of all you may be screaming that a Shark and us humans are not really animals. Which is true but of course the implicit interface makes no relation to a Speaker being an animal, it only cares about the <em>behaviour</em> that is involved. That is a key distinction and gives a huge amount of strength and flexibility to us as developers.</p>
+<p>A shark cannot walk, but it can speak and make noise. So it only has to worry about implementing the Speaker interface. A Falcon can Fly so seeing this new requirement we can create an additional interface Flyer with a method <code>Fly()</code> and we can use that going forwards in the safe knowledge that we have not caused any issues with previous implementations of any of our interfaces. In the old way we may have to create a brand new interface with duplicated methods to meet the requirement, or alter an existing interface which could have knock on changes for our code - not something we really want to have to deal with if we can avoid it.</p>
+<p>Now that all sounds great but you are probably thinking  we can do this with explicit interfaces it just requires a fair bit more work. You're right and I concede on that, this form of behavioural interfaces is possible with both types of interfaces, it is just that implicit interfaces make it a much simpler design choice - so lets move on to something they can't do.</p>
+<h2 id="the-power-of-mocking">The Power of Mocking</h2>
+<p>Take for example the method signature below</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Empty</span>(<span style="color:#a6e22e">b</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">r</span> <span style="color:#a6e22e">ReadCloser</span>) (<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+  <span style="color:#a6e22e">n</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Read</span>(<span style="color:#a6e22e">b</span>)
+  <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">n</span>, <span style="color:#a6e22e">err</span>
+  }
+
+  <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Close</span>()
+
+  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">n</span>, <span style="color:#a6e22e">err</span>
+}
+</code></pre></div><p>If we want to provide a test for our <code>Empty()</code> method and have complete control of how it reacts throughout the method signature then we will want to pass through a ReadCloser that we created.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ReadCloser</span> <span style="color:#66d9ef">interface</span> {
+  <span style="color:#a6e22e">Reader</span>
+  <span style="color:#a6e22e">Closer</span>
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Reader</span> <span style="color:#66d9ef">interface</span> {
+  <span style="color:#a6e22e">Read</span>(<span style="color:#a6e22e">p</span> []<span style="color:#66d9ef">byte</span>) (<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>)
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Closer</span> <span style="color:#66d9ef">interface</span> {
+  <span style="color:#a6e22e">Close</span>() <span style="color:#66d9ef">error</span>
+}
+</code></pre></div><p>Now because this is an implicit interface if we want to create a quick mock for our test we can do the following:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MockReadCloser</span> <span style="color:#66d9ef">interface</span> {
+  <span style="color:#a6e22e">ReadFunc</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">p</span> []<span style="color:#66d9ef">byte</span>) (<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>)
+  <span style="color:#a6e22e">CloseFunc</span> <span style="color:#66d9ef">func</span>() <span style="color:#66d9ef">error</span>
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MockReadCloser</span>) <span style="color:#a6e22e">Read</span>(<span style="color:#a6e22e">p</span> []<span style="color:#66d9ef">byte</span>) (<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">ReadFunc</span>(<span style="color:#a6e22e">p</span>)
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MockReadCloser</span>) <span style="color:#a6e22e">Close</span>() <span style="color:#66d9ef">error</span> {
+  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">CloseFunc</span>()
+}
+</code></pre></div><p>And voila we have ourselves a MockReadCloser that we can manipulate on the fly for our unit tests to easily test each outcome.</p>
+<p>Usage of it is pretty straight forward. In the example below we are going to make a quick mock that will error on reading.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">MockReadCloser</span>{
+  <span style="color:#a6e22e">ReadFunc</span>: <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">_</span> []<span style="color:#66d9ef">byte</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;Error on Read&#34;</span>)
+  },
+  <span style="color:#a6e22e">CloseFunc</span>: <span style="color:#66d9ef">func</span>() <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+  }
+}
+</code></pre></div><p>Now because our mock is flexible lets make one that errors on Closing.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">MockreadCloser</span>{
+  <span style="color:#a6e22e">ReadFunc</span>: <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">_</span> []<span style="color:#66d9ef">byte</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">nil</span>
+  },
+  <span style="color:#a6e22e">CloseFunc</span>: <span style="color:#66d9ef">func</span>() <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;Error on Close&#34;</span>)
+  }
+}
+</code></pre></div><p>And it's that simple. Trying to do the above with explicit interfaces would require a lot more work and usually relies on some external testing library to fill in the blanks but with implicit interfaces all it takes is a few lines of code.</p>
+
+        </div>
+        <div class="article-info">
+    
+        <div class="article-date">2020-03-10</div>
+    
+    <div class="article-taxonomies">
+        
+            
+                <ul class="article-tags">
+                    
+                        <li><a href="https://mikey.uk/tags/go">#go</a></li>
+                    
+                        <li><a href="https://mikey.uk/tags/php">#php</a></li>
+                    
+                        <li><a href="https://mikey.uk/tags/software%20development">#software development</a></li>
+                    
+                </ul>
+        
+    </div>
+</div>
+    </article>
+    
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "https-mikey-uk" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+
+
+        </main>
+        <footer>
+            
+                <p>© Mikey L, 2020<br>
+Powered by <a target="_blank" href="https://gohugo.io/">Hugo</a>, theme <a target="_blank" href="https://github.com/mitrichius/hugo-theme-anubis">Anubis</a>.
+</p>
+            
+        </footer>
+    </div>
+</body>
+</html>

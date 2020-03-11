@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+        
+<meta charset="utf-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+
+<title>Your IDE Is Not an Excuse for Unreadable Code  - Home</title>
+<meta name="description" content="Manchester based Software Developer">
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="https://mikey.uk/rss/">
+
+<link rel="icon" type="image/x-icon" href="https://mikey.uk/favicon.ico">
+<link rel="apple-touch-icon-precomposed" href="https://mikey.uk/favicon.png">
+
+<link rel="stylesheet" href="https://mikey.uk/css/style.css?rnd=1583911878" />
+
+<meta property="og:title" content="Your IDE Is Not an Excuse for Unreadable Code" />
+<meta property="og:description" content="I was reviewing some pull requests recently and I got into a little debate. Just before I go into what that was exactly let me prefix this with: as a developer I am a very strong believer in writing clean, readable code. From top to bottom it should read like a story and if I handed it to someone who had never coded in their life, I want them to be able to understand roughly what the code is doing." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mikey.uk/posts/your-ide-is-not-an-excuse-for-unreadable-code/" />
+<meta property="article:published_time" content="2018-03-16T14:51:15+00:00" />
+<meta property="article:modified_time" content="2018-03-16T14:51:15+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Your IDE Is Not an Excuse for Unreadable Code"/>
+<meta name="twitter:description" content="I was reviewing some pull requests recently and I got into a little debate. Just before I go into what that was exactly let me prefix this with: as a developer I am a very strong believer in writing clean, readable code. From top to bottom it should read like a story and if I handed it to someone who had never coded in their life, I want them to be able to understand roughly what the code is doing."/>
+
+
+
+
+
+
+    
+</head>
+<body>
+    <div class="container">
+        <header> 
+            
+                <h1 class="site-header">
+    <a href="https://mikey.uk/">Home</a>
+</h1>
+<nav>
+    
+    
+    <a class="" href="/about/" title="">About</a>
+    
+    <a class="" href="/tags/" title="">Tags</a>
+    
+    <a class="" href="/posts/" title="">Archive</a>
+    
+</nav>
+
+            
+        </header>
+        <main>
+            
+
+    <article class="post">
+        <header>
+            <h1>Your IDE Is Not an Excuse for Unreadable Code</h1>
+        </header>
+        <div class="content">
+            <p>I was reviewing some pull requests recently and I got into a  little debate. Just before I go into what that was exactly let me prefix this with: as a developer I am a very strong believer in writing clean, readable code. From top to bottom it should read like a story and if I handed it to someone who had never coded in their life, I want them to be able to understand roughly what the code is doing.</p>
+<p>So the debate started with the following comment;</p>
+<blockquote>
+<p>“My IDE tells me what that parameter is meant to do when I hover over it”</p>
+</blockquote>
+<p>Some of you may agree with this point and some of you, like myself, will disagree with it. To me just because your IDE provides a utility does not mean you should rely on it. It should be there to aid your development, but it should not be a crutch that your code relies on to be readable.</p>
+<p>Lets dig into it with a quick example involving boolean flags, something which can often refer to code smell on their own (and for good reason!).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">$postgresql-&gt;truncateTable(&#39;user&#39;, true);
+</code></pre></div><p>Could you tell purely by scanning over the above line what the flag was doing? I could hover over and check which inevitably I would be forced to do in this situation but that’s just extra cognitive load. Load which could easily be avoided with a few simple techniques. My personal take is to avoid boolean flags wherever possible, but if I really need to utilise them I’ll often create well named constants to replace passing through <code>true/false</code> - for example:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">$postgresql-&gt;truncateTable(&#39;user&#39;, PostgreSQL::RESTART_SEQUENCE)
+</code></pre></div><p>A parameter like the above allows me to scan through the code and understand at a glance what each part is doing without me having to hover over every other parameter or worse jump into a never-ending rabbit hole of methods. Alternatively (and preferably in my opinion) you could create separate methods to remove the boolean flags.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">$postgresql-&gt;truncateTable(&#39;user&#39;);
+$postgresql-&gt;restartSequence(&#39;user&#39;);
+</code></pre></div><p>Overall we have added an extra line but that trade off gives us more readable code that does not rely on an IDE to understand at first glance. Even better we don’t have to dodge, duck, dip, dive and dodge into every other method to check its parameters, or what the flags mean if our IDE does not support hovering hints. We simply read well named methods and carry on our merry way.</p>
+<p>Oh and lets not forget there are developers who choose not to use an IDE, or the times that you are in an environment where you do not have access to your favourite IDE. Maybe that urgent fix for that server that’s on fire at at 4:00am in the morning that you just had to SSH into.</p>
+<p>These days we have so many tools at our disposal that they can make us lazy and reliant. As Developers we should always strive to write the best code we possibly can, and avoid the shortcuts that can lead to technical debt.</p>
+
+        </div>
+        <div class="article-info">
+    
+        <div class="article-date">2018-03-16</div>
+    
+    <div class="article-taxonomies">
+        
+            
+                <ul class="article-tags">
+                    
+                        <li><a href="https://mikey.uk/tags/software%20development">#software development</a></li>
+                    
+                        <li><a href="https://mikey.uk/tags/clean%20code">#clean code</a></li>
+                    
+                </ul>
+        
+    </div>
+</div>
+    </article>
+    
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "https-mikey-uk" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+
+
+        </main>
+        <footer>
+            
+                <p>© Mikey L, 2020<br>
+Powered by <a target="_blank" href="https://gohugo.io/">Hugo</a>, theme <a target="_blank" href="https://github.com/mitrichius/hugo-theme-anubis">Anubis</a>.
+</p>
+            
+        </footer>
+    </div>
+</body>
+</html>

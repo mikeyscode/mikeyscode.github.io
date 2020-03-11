@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>software development on Home</title>
+    <link>https://mikey.uk/tags/software-development/</link>
+    <description>Home (software development)</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Wed, 11 Mar 2020 06:41:29 +0000</lastBuildDate>
+    
+    <atom:link href="https://mikey.uk/tags/software-development/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Behavioural Interfaces</title>
+      <link>https://mikey.uk/posts/behavioural-interfaces/</link>
+      <pubDate>Wed, 11 Mar 2020 06:41:29 +0000</pubDate>
+      
+      <guid>https://mikey.uk/posts/behavioural-interfaces/</guid>
+      <description>&lt;p&gt;When it comes to designing abstractions interfaces are a fundamental tool in a developer&#39;s arsenal. Through my recent ventures into the Go languages I have begun to change my approach to how I use interfaces to a more behavioural approach, for example rather than having an interface to represent a &lt;em&gt;thing&lt;/em&gt; such as an animal or a user, I instead aim to represent the behaviours that those &lt;em&gt;things&lt;/em&gt; can do; walk, talk, login and so on.&lt;/p&gt;
+&lt;p&gt;I said this approach has only become a recent change and that is because of that Go offers &lt;strong&gt;implicit&lt;/strong&gt; interfaces which are perfect for abstracting behaviours as it allows the use lots of slim interfaces with little effort on your part.&lt;/p&gt;
+&lt;p&gt;Lets jump into an example, if we want to represent the behaviours of a human performer. We may say that they can &lt;em&gt;Speak&lt;/em&gt;, &lt;em&gt;Perform&lt;/em&gt; and &lt;em&gt;Walk&lt;/em&gt;. In the old style you might end up creating something like;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;Speak&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;Perform&lt;/span&gt;()
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;Walk&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;distance&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;But by modelling the interfaces based on a &lt;em&gt;thing&lt;/em&gt; such as a human we are creating unnecessary duplication and tightly linking our behaviours together. If we wanted to create an Animal performer next we would have to duplicate all of the above under a new &lt;code&gt;Animal&lt;/code&gt; interface. That&#39;s not very flexible so instead lets extract the behaviours to slim interfaces.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Speaker&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;Speak&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Performer&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;Perform&lt;/span&gt;()
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Walker&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;Walk&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;distance&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we have three behavioural interfaces that have no direct link to a human, they could be satisfied by an animal, a fish or something completely different. This reduces duplication of code and gives us a more flexible layer of abstraction.&lt;/p&gt;
+&lt;p&gt;Lets take a look at how that behavioural abstraction gives us more reusable code by considering the following function;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;Perform&lt;/span&gt;() {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;What kind of shoes do ninjas wear?&amp;#34;&lt;/span&gt;)
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sneakers!&amp;#34;&lt;/span&gt;)
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Dog&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;d&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Dog&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;Perform&lt;/span&gt;() {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;d&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Backflip&lt;/span&gt;()
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then at our point of use we may have&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;package&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;StartAct&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Performer&lt;/span&gt;) {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Perform&lt;/span&gt;()
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;acts&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; []&lt;span style=&#34;color:#a6e22e&#34;&gt;Performer&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;Dog&lt;/span&gt;{}, &lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt;{}}
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;act&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;range&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;acts&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;StartAct&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;act&lt;/span&gt;)
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From this we can see that because we focused on the behaviour we have more flexibility in how we can use our implementations. We don&#39;t have to create different stage acts for Humans, Dogs or anything else when in the end they are all just trying to perform.&lt;/p&gt;
+&lt;p&gt;Now at the moment our acts are all just performing so there&#39;s little point in the wrapper function we have for it. What if we wanted to add a welcome message for each act? We want to focus on utilising slim interfaces, ideally with one method, so how do we pass through additional information without having to change our performer interface?&lt;/p&gt;
+&lt;p&gt;This is where type assertions come in beautifully. Take the updated code below (trimmed for brevity)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ShowNamer&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;ShowName&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;Perform&lt;/span&gt;() { &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt; }
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;ShowName&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;h&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You&#39;ll notice we now have a new interface and the human implements it implicitly. So what does that give us the power to do you may be wondering, we are still only passing a &lt;code&gt;Performer&lt;/code&gt; to our &lt;code&gt;StageAct&lt;/code&gt;. Well thanks to type assertions we can see if our &lt;code&gt;Performer&lt;/code&gt; instance implements any other interfaces that might be useful to us.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;StageAct&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Performer&lt;/span&gt;) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;n&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;ok&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.(&lt;span style=&#34;color:#a6e22e&#34;&gt;ShowNamer&lt;/span&gt;); &lt;span style=&#34;color:#a6e22e&#34;&gt;ok&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Printf&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Welcome to the fabulous act of %s\n&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;n&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;)
+  }
+  
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Perform&lt;/span&gt;()
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So now we just have to update our main&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;acts&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; []&lt;span style=&#34;color:#a6e22e&#34;&gt;Performer&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;Dog&lt;/span&gt;{}, &lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;ShowName&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Bob the Joker&amp;#34;&lt;/span&gt;}}
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;act&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;range&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;acts&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;StartAct&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;act&lt;/span&gt;)
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And that&#39;s it, where our stage act has a show name set our type assertion will kick in and display the name of the performance otherwise we just skip it and let the act get on with their performance.&lt;/p&gt;
+&lt;p&gt;It&#39;s simple and flexibility like this which is a huge draw to the Go langauge for me.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Your IDE Is Not an Excuse for Unreadable Code</title>
+      <link>https://mikey.uk/posts/your-ide-is-not-an-excuse-for-unreadable-code/</link>
+      <pubDate>Fri, 16 Mar 2018 14:51:15 +0000</pubDate>
+      
+      <guid>https://mikey.uk/posts/your-ide-is-not-an-excuse-for-unreadable-code/</guid>
+      <description>&lt;p&gt;I was reviewing some pull requests recently and I got into a  little debate. Just before I go into what that was exactly let me prefix this with: as a developer I am a very strong believer in writing clean, readable code. From top to bottom it should read like a story and if I handed it to someone who had never coded in their life, I want them to be able to understand roughly what the code is doing.&lt;/p&gt;
+&lt;p&gt;So the debate started with the following comment;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“My IDE tells me what that parameter is meant to do when I hover over it”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Some of you may agree with this point and some of you, like myself, will disagree with it. To me just because your IDE provides a utility does not mean you should rely on it. It should be there to aid your development, but it should not be a crutch that your code relies on to be readable.&lt;/p&gt;
+&lt;p&gt;Lets dig into it with a quick example involving boolean flags, something which can often refer to code smell on their own (and for good reason!).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;$postgresql-&amp;gt;truncateTable(&amp;#39;user&amp;#39;, true);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Could you tell purely by scanning over the above line what the flag was doing? I could hover over and check which inevitably I would be forced to do in this situation but that’s just extra cognitive load. Load which could easily be avoided with a few simple techniques. My personal take is to avoid boolean flags wherever possible, but if I really need to utilise them I’ll often create well named constants to replace passing through &lt;code&gt;true/false&lt;/code&gt; - for example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;$postgresql-&amp;gt;truncateTable(&amp;#39;user&amp;#39;, PostgreSQL::RESTART_SEQUENCE)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A parameter like the above allows me to scan through the code and understand at a glance what each part is doing without me having to hover over every other parameter or worse jump into a never-ending rabbit hole of methods. Alternatively (and preferably in my opinion) you could create separate methods to remove the boolean flags.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;$postgresql-&amp;gt;truncateTable(&amp;#39;user&amp;#39;);
+$postgresql-&amp;gt;restartSequence(&amp;#39;user&amp;#39;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Overall we have added an extra line but that trade off gives us more readable code that does not rely on an IDE to understand at first glance. Even better we don’t have to dodge, duck, dip, dive and dodge into every other method to check its parameters, or what the flags mean if our IDE does not support hovering hints. We simply read well named methods and carry on our merry way.&lt;/p&gt;
+&lt;p&gt;Oh and lets not forget there are developers who choose not to use an IDE, or the times that you are in an environment where you do not have access to your favourite IDE. Maybe that urgent fix for that server that’s on fire at at 4:00am in the morning that you just had to SSH into.&lt;/p&gt;
+&lt;p&gt;These days we have so many tools at our disposal that they can make us lazy and reliant. As Developers we should always strive to write the best code we possibly can, and avoid the shortcuts that can lead to technical debt.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Redis Pipelines</title>
+      <link>https://mikey.uk/posts/redis-pipelines/</link>
+      <pubDate>Tue, 23 Jan 2018 14:42:03 +0000</pubDate>
+      
+      <guid>https://mikey.uk/posts/redis-pipelines/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://upload.wikimedia.org/wikipedia/en/thumb/6/6b/Redis_Logo.svg/1280px-Redis_Logo.svg.png&#34; alt=&#34;Redis logo&#34; title=&#34;Redis&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;what-are-pipelines&#34;&gt;What are Pipelines?&lt;/h2&gt;
+&lt;p&gt;At the very basic level Redis Pipelines allow us to send multiple commands to our server, have them executed and then read all the replies. If you are wondering why that’s different to how it normally works, think of it this way:&lt;/p&gt;
+&lt;p&gt;We have a bridge, on one side of the bridge is all the commands we want to run. Our helper memorises a single command, carries it across the bridge and executes it. He then comes back across the bridge and tells us the result of the command.&lt;/p&gt;
+&lt;p&gt;Now that’s all well and good if we have a single or even a few commands, our helper is a pretty fast runner so we get the results from our commands pretty quick, but what if we have hundreds, thousands or even millions of commands?&lt;/p&gt;
+&lt;p&gt;Well let&#39;s teach our helper about Pipelines. This time rather than memorising one command and crossing the bridge, he’s going to memorise them all first, then cross the bridge and execute them all together, one after the other. Then he’s going to return with a list of all the results when he’s done.&lt;/p&gt;
+&lt;p&gt;In Redis terms every time we crossed the bridge we had to connect to Redis again. So you can imagine how much faster only crossing the bridge once is against hundred or even a thousand times.&lt;/p&gt;
+&lt;p&gt;The keen eyed ones among you may have spotted something about Pipelines though, our helper is having to store in memory a lot of commands, as the amount of commands increases so does the load on our helper&#39;s brain. So what can we do to reduce that?&lt;/p&gt;
+&lt;p&gt;Well depending on how good your helper is and how much he can store at once we can try and limit the amount of commands he has to remember through batching. Rather than sending all our requests in one go, we can send across 250 at a time. This’ll still be faster than our original method of one at a time, but limit the amount of memory our helper needs.&lt;/p&gt;
+&lt;h2 id=&#34;so-how-do-you-implement-pipelines&#34;&gt;So how do you implement Pipelines?&lt;/h2&gt;
+&lt;p&gt;Well it will vary depending on your implementation and language of choice but below I’ll demonstrate a simple example utilising &lt;a href=&#34;https://github.com/phpredis/phpredis&#34;&gt;phpredis&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In our basic example we have a Book class which has a cache method. This method takes in an array of books that we loop through and store in redis as hashes. You will notice I haven’t implemented batching for this example, I&#39;ll leave that for you to figure out.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;?php&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Book&lt;/span&gt;
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;REDIS_NAMESPACE&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;library:books&amp;#39;&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;DEFAULT_TTL&lt;/span&gt; 	  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;14400&lt;/span&gt;;
+	
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;cache&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;array&lt;/span&gt; $books)
+    {
+        $redis    &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Redis&lt;/span&gt;();
+        $pipeline &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; $redis&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;multi&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;Redis&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;PIPELINE&lt;/span&gt;);
+
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; ($books &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; $book) {
+            $bookNamespace &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sprintf&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;%s:%s&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;REDIS_NAMESPACE&lt;/span&gt;, $book&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;);
+            $pipeline&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;hMSet&lt;/span&gt;($bookNamespace, [
+                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;id&amp;#39;&lt;/span&gt; 		 &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; $book&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;,
+                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;title&amp;#39;&lt;/span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; $book&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;title&lt;/span&gt;,
+                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;returnDate&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; $book&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;returnDate&lt;/span&gt;
+            ]);
+
+            $pipeline&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;expire&lt;/span&gt;($bookNamespace, &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;DEFAULT_TTL&lt;/span&gt;);
+        }
+
+        $pipeline&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;exec&lt;/span&gt;();	
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So lets go over the key things we are doing here:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;$pipeline = $redis-&amp;gt;multi(Redis::PIPELINE);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;First we start out by creating our Pipeline, in phpredis to do this we just call &lt;code&gt;-&amp;gt;multi()&lt;/code&gt; and pass through the pipeline constant. This will create a handle for us that we can execute our commands on.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;$pipeline-&amp;gt;hMSet($bookNamespace, [
+    &amp;#39;id&amp;#39;         =&amp;gt; $book-&amp;gt;id,
+    &amp;#39;title&amp;#39;      =&amp;gt; $book-&amp;gt;title,
+    &amp;#39;returnDate&amp;#39; =&amp;gt; $book-&amp;gt;returnDate
+]);
+
+$pipeline-&amp;gt;expire($bookNamespace, self::DEFAULT_TTL);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we have our pipeline created we can throw commands at it, so that&#39;s exactly what we do. While looping through each of our books we add a &lt;code&gt;-&amp;gt;hMSet()&lt;/code&gt; and an &lt;code&gt;-&amp;gt;expire()&lt;/code&gt; command to our pipeline, this stores the commands and all the information they need to execute up until the next step.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;$pipeline-&amp;gt;exec();
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now our pipeline has a bunch of commands that we want to execute, so all we have to do is call &lt;code&gt;exec()&lt;/code&gt; and it will start firing through the commands in a queue system (first in, first out).&lt;/p&gt;
+&lt;p&gt;And that is all there is to it, we do not have any commands that will return any useful information so we do not need to do anything with the result from &lt;code&gt;exec()&lt;/code&gt;. If you were however retreiving rather than than setting, you would access your results like so: &lt;code&gt;$results = $pipeline-&amp;gt;exec();&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This is just a basic introduction to Redis Pipelines, there is a lot more to them than I&#39;ve covered here so I highly encourage you read the redis.io topic to further your knowledge on them because they are a fundamental tool in day to day Redis operation: &lt;a href=&#34;https://redis.io/topics/pipelining&#34;&gt;https://redis.io/topics/pipelining&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

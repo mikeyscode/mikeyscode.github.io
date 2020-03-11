@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://mikey.uk/</loc>
+    <lastmod>2020-03-11T06:41:29+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/posts/behavioural-interfaces/</loc>
+    <lastmod>2020-03-11T06:41:29+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/tags/go/</loc>
+    <lastmod>2020-03-11T06:41:29+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/posts/</loc>
+    <lastmod>2020-03-11T06:41:29+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/tags/software-development/</loc>
+    <lastmod>2020-03-11T06:41:29+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/tags/</loc>
+    <lastmod>2020-03-11T06:41:29+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/archives/</loc>
+    <lastmod>2020-03-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/posts/five-tips-to-wake-up-earlier/</loc>
+    <lastmod>2019-07-09T14:57:07+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/tags/personal-development/</loc>
+    <lastmod>2019-07-09T14:57:07+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/about/</loc>
+    <lastmod>2019-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/tags/clean-code/</loc>
+    <lastmod>2018-03-16T14:51:15+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/posts/your-ide-is-not-an-excuse-for-unreadable-code/</loc>
+    <lastmod>2018-03-16T14:51:15+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/tags/php/</loc>
+    <lastmod>2018-01-23T14:42:03+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/tags/redis/</loc>
+    <lastmod>2018-01-23T14:42:03+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/posts/redis-pipelines/</loc>
+    <lastmod>2018-01-23T14:42:03+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/categories/</loc>
+  </url>
+  
+</urlset>

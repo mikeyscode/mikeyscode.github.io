@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+        
+<meta charset="utf-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+
+<title>Behavioural Interfaces  - Home</title>
+<meta name="description" content="Manchester based Software Developer">
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="https://mikey.uk/rss/">
+
+<link rel="icon" type="image/x-icon" href="https://mikey.uk/favicon.ico">
+<link rel="apple-touch-icon-precomposed" href="https://mikey.uk/favicon.png">
+
+<link rel="stylesheet" href="https://mikey.uk/css/style.css?rnd=1583911878" />
+
+<meta property="og:title" content="Behavioural Interfaces" />
+<meta property="og:description" content="When it comes to designing abstractions interfaces are a fundamental tool in a developer&#39;s arsenal. Through my recent ventures into the Go languages I have begun to change my approach to how I use interfaces to a more behavioural approach, for example rather than having an interface to represent a thing such as an animal or a user, I instead aim to represent the behaviours that those things can do; walk, talk, login and so on." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mikey.uk/posts/behavioural-interfaces/" />
+<meta property="article:published_time" content="2020-03-11T06:41:29+00:00" />
+<meta property="article:modified_time" content="2020-03-11T06:41:29+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Behavioural Interfaces"/>
+<meta name="twitter:description" content="When it comes to designing abstractions interfaces are a fundamental tool in a developer&#39;s arsenal. Through my recent ventures into the Go languages I have begun to change my approach to how I use interfaces to a more behavioural approach, for example rather than having an interface to represent a thing such as an animal or a user, I instead aim to represent the behaviours that those things can do; walk, talk, login and so on."/>
+
+
+
+
+
+
+    
+</head>
+<body>
+    <div class="container">
+        <header> 
+            
+                <h1 class="site-header">
+    <a href="https://mikey.uk/">Home</a>
+</h1>
+<nav>
+    
+    
+    <a class="" href="/about/" title="">About</a>
+    
+    <a class="" href="/tags/" title="">Tags</a>
+    
+    <a class="" href="/posts/" title="">Archive</a>
+    
+</nav>
+
+            
+        </header>
+        <main>
+            
+
+    <article class="post">
+        <header>
+            <h1>Behavioural Interfaces</h1>
+        </header>
+        <div class="content">
+            <p>When it comes to designing abstractions interfaces are a fundamental tool in a developer's arsenal. Through my recent ventures into the Go languages I have begun to change my approach to how I use interfaces to a more behavioural approach, for example rather than having an interface to represent a <em>thing</em> such as an animal or a user, I instead aim to represent the behaviours that those <em>things</em> can do; walk, talk, login and so on.</p>
+<p>I said this approach has only become a recent change and that is because of that Go offers <strong>implicit</strong> interfaces which are perfect for abstracting behaviours as it allows the use lots of slim interfaces with little effort on your part.</p>
+<p>Lets jump into an example, if we want to represent the behaviours of a human performer. We may say that they can <em>Speak</em>, <em>Perform</em> and <em>Walk</em>. In the old style you might end up creating something like;</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Human</span> <span style="color:#66d9ef">interface</span> {
+  <span style="color:#a6e22e">Speak</span>() <span style="color:#66d9ef">string</span>
+  <span style="color:#a6e22e">Perform</span>()
+  <span style="color:#a6e22e">Walk</span>(<span style="color:#a6e22e">distance</span> <span style="color:#66d9ef">int</span>)
+}
+</code></pre></div><p>But by modelling the interfaces based on a <em>thing</em> such as a human we are creating unnecessary duplication and tightly linking our behaviours together. If we wanted to create an Animal performer next we would have to duplicate all of the above under a new <code>Animal</code> interface. That's not very flexible so instead lets extract the behaviours to slim interfaces.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Speaker</span> <span style="color:#66d9ef">interface</span> {
+  <span style="color:#a6e22e">Speak</span>() <span style="color:#66d9ef">string</span>
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Performer</span> <span style="color:#66d9ef">interface</span> {
+  <span style="color:#a6e22e">Perform</span>()
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Walker</span> <span style="color:#66d9ef">interface</span> {
+  <span style="color:#a6e22e">Walk</span>(<span style="color:#a6e22e">distance</span> <span style="color:#66d9ef">int</span>)
+}
+</code></pre></div><p>Now we have three behavioural interfaces that have no direct link to a human, they could be satisfied by an animal, a fish or something completely different. This reduces duplication of code and gives us a more flexible layer of abstraction.</p>
+<p>Lets take a look at how that behavioural abstraction gives us more reusable code by considering the following function;</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Human</span> <span style="color:#66d9ef">struct</span> {}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">Human</span>) <span style="color:#a6e22e">Perform</span>() {
+  <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;What kind of shoes do ninjas wear?&#34;</span>)
+  <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Sneakers!&#34;</span>)
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Dog</span> <span style="color:#66d9ef">struct</span> {}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">d</span> <span style="color:#a6e22e">Dog</span>) <span style="color:#a6e22e">Perform</span>() {
+  <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">Backflip</span>()
+}
+</code></pre></div><p>Then at our point of use we may have</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">StartAct</span>(<span style="color:#a6e22e">p</span> <span style="color:#a6e22e">Performer</span>) {
+  <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">Perform</span>()
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+  <span style="color:#a6e22e">acts</span> <span style="color:#f92672">:=</span> []<span style="color:#a6e22e">Performer</span>{<span style="color:#a6e22e">Dog</span>{}, <span style="color:#a6e22e">Human</span>{}}
+  <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">act</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">acts</span> {
+    <span style="color:#a6e22e">StartAct</span>(<span style="color:#a6e22e">act</span>)
+  }
+}
+</code></pre></div><p>From this we can see that because we focused on the behaviour we have more flexibility in how we can use our implementations. We don't have to create different stage acts for Humans, Dogs or anything else when in the end they are all just trying to perform.</p>
+<p>Now at the moment our acts are all just performing so there's little point in the wrapper function we have for it. What if we wanted to add a welcome message for each act? We want to focus on utilising slim interfaces, ideally with one method, so how do we pass through additional information without having to change our performer interface?</p>
+<p>This is where type assertions come in beautifully. Take the updated code below (trimmed for brevity)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ShowNamer</span> <span style="color:#66d9ef">interface</span> {
+  <span style="color:#a6e22e">ShowName</span>() <span style="color:#66d9ef">string</span>
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Human</span> <span style="color:#66d9ef">struct</span> {
+  <span style="color:#a6e22e">Name</span> <span style="color:#66d9ef">string</span>
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">Human</span>) <span style="color:#a6e22e">Perform</span>() { <span style="color:#f92672">...</span> }
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">Human</span>) <span style="color:#a6e22e">ShowName</span>() <span style="color:#66d9ef">string</span> {
+  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">Name</span>
+}
+</code></pre></div><p>You'll notice we now have a new interface and the human implements it implicitly. So what does that give us the power to do you may be wondering, we are still only passing a <code>Performer</code> to our <code>StageAct</code>. Well thanks to type assertions we can see if our <code>Performer</code> instance implements any other interfaces that might be useful to us.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">StageAct</span>(<span style="color:#a6e22e">p</span> <span style="color:#a6e22e">Performer</span>) {
+  <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">n</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">p</span>.(<span style="color:#a6e22e">ShowNamer</span>); <span style="color:#a6e22e">ok</span> {
+    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Welcome to the fabulous act of %s\n&#34;</span>, <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">Name</span>)
+  }
+  
+  <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">Perform</span>()
+}
+</code></pre></div><p>So now we just have to update our main</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+  <span style="color:#a6e22e">acts</span> <span style="color:#f92672">:=</span> []<span style="color:#a6e22e">Performer</span>{<span style="color:#a6e22e">Dog</span>{}, <span style="color:#a6e22e">Human</span>{<span style="color:#a6e22e">ShowName</span>: <span style="color:#e6db74">&#34;Bob the Joker&#34;</span>}}
+  <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">act</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">acts</span> {
+    <span style="color:#a6e22e">StartAct</span>(<span style="color:#a6e22e">act</span>)
+  }
+}
+</code></pre></div><p>And that's it, where our stage act has a show name set our type assertion will kick in and display the name of the performance otherwise we just skip it and let the act get on with their performance.</p>
+<p>It's simple and flexibility like this which is a huge draw to the Go langauge for me.</p>
+
+        </div>
+        <div class="article-info">
+    
+        <div class="article-date">2020-03-11</div>
+    
+    <div class="article-taxonomies">
+        
+            
+                <ul class="article-tags">
+                    
+                        <li><a href="https://mikey.uk/tags/go">#go</a></li>
+                    
+                        <li><a href="https://mikey.uk/tags/software%20development">#software development</a></li>
+                    
+                </ul>
+        
+    </div>
+</div>
+    </article>
+    
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "https-mikey-uk" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+
+
+        </main>
+        <footer>
+            
+                <p>© Mikey L, 2020<br>
+Powered by <a target="_blank" href="https://gohugo.io/">Hugo</a>, theme <a target="_blank" href="https://github.com/mitrichius/hugo-theme-anubis">Anubis</a>.
+</p>
+            
+        </footer>
+    </div>
+</body>
+</html>

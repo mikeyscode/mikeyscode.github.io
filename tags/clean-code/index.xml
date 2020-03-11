@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>clean code on Home</title>
+    <link>https://mikey.uk/tags/clean-code/</link>
+    <description>Home (clean code)</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Fri, 16 Mar 2018 14:51:15 +0000</lastBuildDate>
+    
+    <atom:link href="https://mikey.uk/tags/clean-code/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Your IDE Is Not an Excuse for Unreadable Code</title>
+      <link>https://mikey.uk/posts/your-ide-is-not-an-excuse-for-unreadable-code/</link>
+      <pubDate>Fri, 16 Mar 2018 14:51:15 +0000</pubDate>
+      
+      <guid>https://mikey.uk/posts/your-ide-is-not-an-excuse-for-unreadable-code/</guid>
+      <description>&lt;p&gt;I was reviewing some pull requests recently and I got into a  little debate. Just before I go into what that was exactly let me prefix this with: as a developer I am a very strong believer in writing clean, readable code. From top to bottom it should read like a story and if I handed it to someone who had never coded in their life, I want them to be able to understand roughly what the code is doing.&lt;/p&gt;
+&lt;p&gt;So the debate started with the following comment;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“My IDE tells me what that parameter is meant to do when I hover over it”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Some of you may agree with this point and some of you, like myself, will disagree with it. To me just because your IDE provides a utility does not mean you should rely on it. It should be there to aid your development, but it should not be a crutch that your code relies on to be readable.&lt;/p&gt;
+&lt;p&gt;Lets dig into it with a quick example involving boolean flags, something which can often refer to code smell on their own (and for good reason!).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;$postgresql-&amp;gt;truncateTable(&amp;#39;user&amp;#39;, true);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Could you tell purely by scanning over the above line what the flag was doing? I could hover over and check which inevitably I would be forced to do in this situation but that’s just extra cognitive load. Load which could easily be avoided with a few simple techniques. My personal take is to avoid boolean flags wherever possible, but if I really need to utilise them I’ll often create well named constants to replace passing through &lt;code&gt;true/false&lt;/code&gt; - for example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;$postgresql-&amp;gt;truncateTable(&amp;#39;user&amp;#39;, PostgreSQL::RESTART_SEQUENCE)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A parameter like the above allows me to scan through the code and understand at a glance what each part is doing without me having to hover over every other parameter or worse jump into a never-ending rabbit hole of methods. Alternatively (and preferably in my opinion) you could create separate methods to remove the boolean flags.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;$postgresql-&amp;gt;truncateTable(&amp;#39;user&amp;#39;);
+$postgresql-&amp;gt;restartSequence(&amp;#39;user&amp;#39;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Overall we have added an extra line but that trade off gives us more readable code that does not rely on an IDE to understand at first glance. Even better we don’t have to dodge, duck, dip, dive and dodge into every other method to check its parameters, or what the flags mean if our IDE does not support hovering hints. We simply read well named methods and carry on our merry way.&lt;/p&gt;
+&lt;p&gt;Oh and lets not forget there are developers who choose not to use an IDE, or the times that you are in an environment where you do not have access to your favourite IDE. Maybe that urgent fix for that server that’s on fire at at 4:00am in the morning that you just had to SSH into.&lt;/p&gt;
+&lt;p&gt;These days we have so many tools at our disposal that they can make us lazy and reliant. As Developers we should always strive to write the best code we possibly can, and avoid the shortcuts that can lead to technical debt.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
