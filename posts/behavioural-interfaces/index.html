@@ -137,7 +137,7 @@
 }
 </code></pre></div><p>So now we just have to update our main</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-  <span style="color:#a6e22e">acts</span> <span style="color:#f92672">:=</span> []<span style="color:#a6e22e">Performer</span>{<span style="color:#a6e22e">Dog</span>{}, <span style="color:#a6e22e">Human</span>{<span style="color:#a6e22e">ShowName</span>: <span style="color:#e6db74">&#34;Bob the Joker&#34;</span>}}
+  <span style="color:#a6e22e">acts</span> <span style="color:#f92672">:=</span> []<span style="color:#a6e22e">Performer</span>{<span style="color:#a6e22e">Dog</span>{}, <span style="color:#a6e22e">Human</span>{<span style="color:#a6e22e">Name</span>: <span style="color:#e6db74">&#34;Bob the Joker&#34;</span>}}
   <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">act</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">acts</span> {
     <span style="color:#a6e22e">StartAct</span>(<span style="color:#a6e22e">act</span>)
   }
