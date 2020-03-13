@@ -16,10 +16,10 @@
 <link rel="icon" type="image/x-icon" href="https://mikey.uk/favicon.ico">
 <link rel="apple-touch-icon-precomposed" href="https://mikey.uk/favicon.png">
 
-<link rel="stylesheet" href="https://mikey.uk/css/style.css?rnd=1584084343" />
+<link rel="stylesheet" href="https://mikey.uk/css/style.css?rnd=1584084688" />
 
 <meta property="og:title" content="Mocking With Go Interfaces" />
-<meta property="og:description" content="Go&#39;s implicit interfaces provide great flexibility when it comes to testing our applications. By satisfying the expected contract we can create mocks easily to be used within our test cases. Within that there are two main approaches i personally take to mocking.
+<meta property="og:description" content="Go&#39;s implicit interfaces provide great flexibility when it comes to testing our applications. By satisfying the expected contract we can create mocks easily to be used within our test cases. For me there are two main approaches I personally take to mocking.
 Lightweight Mocking I call this lightweight as it is less involved than the method we will come onto next. It basically involves just creating a new structure which satisfies the interface." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://mikey.uk/posts/mocking-with-go-interfaces/" />
@@ -28,7 +28,7 @@ Lightweight Mocking I call this lightweight as it is less involved than the meth
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Mocking With Go Interfaces"/>
-<meta name="twitter:description" content="Go&#39;s implicit interfaces provide great flexibility when it comes to testing our applications. By satisfying the expected contract we can create mocks easily to be used within our test cases. Within that there are two main approaches i personally take to mocking.
+<meta name="twitter:description" content="Go&#39;s implicit interfaces provide great flexibility when it comes to testing our applications. By satisfying the expected contract we can create mocks easily to be used within our test cases. For me there are two main approaches I personally take to mocking.
 Lightweight Mocking I call this lightweight as it is less involved than the method we will come onto next. It basically involves just creating a new structure which satisfies the interface."/>
 
 
@@ -66,7 +66,7 @@ Lightweight Mocking I call this lightweight as it is less involved than the meth
             <h1>Mocking With Go Interfaces</h1>
         </header>
         <div class="content">
-            <p>Go's implicit interfaces provide great flexibility when it comes to testing our applications. By satisfying the expected contract we can create mocks easily to be used within our test cases. Within that there are two main approaches i personally take to mocking.</p>
+            <p>Go's implicit interfaces provide great flexibility when it comes to testing our applications. By satisfying the expected contract we can create mocks easily to be used within our test cases. For me there are two main approaches I personally take to mocking.</p>
 <h2 id="lightweight-mocking">Lightweight Mocking</h2>
 <p>I call this lightweight as it is less involved than the method we will come onto next. It basically involves just creating a new structure which satisfies the interface.</p>
 <p>Take the following interface where we create a <code>DepositWithdrawer</code> which represents a person who is capable of depositing and withdrawing from an account.</p>
@@ -87,15 +87,15 @@ Lightweight Mocking I call this lightweight as it is less involved than the meth
 <span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">MockAccountHolder</span>) <span style="color:#a6e22e">Withdraw</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">amount</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">ReturnAmount</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">ReturnErr</span>
 }
-</code></pre></div><p>We now have a quick mock set up that we can determine the return conditions within and utilise in our tests, usage of the above would look something like this;</p>
+</code></pre></div><p>We now have a quick mock set up that we can determine the return conditions within and utilise in our tests, usage of the above would look something like this</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">accountHolder</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">MockAccountHolder</span>{<span style="color:#a6e22e">ReturnAmount</span>: <span style="color:#ae81ff">100</span>, <span style="color:#a6e22e">ReturnErr</span>: <span style="color:#66d9ef">nil</span>}
 <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">TransferFunds</span>(<span style="color:#ae81ff">1000</span>, <span style="color:#a6e22e">accountHolder</span>)
 <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
   <span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">Fatalf</span>(<span style="color:#f92672">...</span>)
 }
-</code></pre></div><p>For a lot of use cases this lightweight approach to mocking your dependencies will work fine, however in some cases it may not provide enough flexibility for what you are after. For example you would have to createa a different account holder for each test to alter what it would return, which is what brings us to our &ldquo;more involved&rdquo; approach.</p>
+</code></pre></div><p>For a lot of use cases this lightweight approach to mocking your dependencies will work fine, however in some cases it may not provide enough flexibility for what you are after. For example you would have to create a different account holder for each test condition to alter what it would return, which is what brings us to our &ldquo;more involved&rdquo; approach which offers us a bit more flexibility.</p>
 <h2 id="the-more-involved-approach-to-mocking">The More Involved Approach to Mocking</h2>
-<p>I spent far to long wondering what to title this part. Despite being more involved I would definitely not call this &ldquo;heavy weight&rdquo; mocking since it is still fairly simple to set up. The power of this second approach comes from being able to utilise functional properties which will make more sense when you look at the example below;</p>
+<p>I spent far to long wondering what to title this part. Despite being more involved I would definitely not call this &ldquo;heavy weight&rdquo; mocking since it is still fairly simple to set up. The power of this second approach comes from being able to utilise functional properties which will make more sense when you look at the example below</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MockAccountHolder</span> <span style="color:#66d9ef">struct</span> {
   <span style="color:#a6e22e">DepositFunc</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">amount</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) 
   <span style="color:#a6e22e">WithdrawFunc</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">amount</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>)
@@ -120,10 +120,6 @@ Lightweight Mocking I call this lightweight as it is less involved than the meth
     <span style="color:#a6e22e">TransferAmount</span>: <span style="color:#ae81ff">500</span>,
     <span style="color:#a6e22e">AccountHolder</span>: <span style="color:#a6e22e">MockAccountHolder</span>{
       <span style="color:#a6e22e">DepositFunc</span>: <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">amount</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
-        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">amount</span> <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span> {
-          <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;amount should be greater than 0&#34;</span>)
-        }
-
         <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">amount</span>, <span style="color:#66d9ef">nil</span>
       },
       <span style="color:#a6e22e">WithdrawFunc</span>: <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">amount</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
