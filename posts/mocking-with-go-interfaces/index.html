@@ -16,7 +16,7 @@
 <link rel="icon" type="image/x-icon" href="https://mikey.uk/favicon.ico">
 <link rel="apple-touch-icon-precomposed" href="https://mikey.uk/favicon.png">
 
-<link rel="stylesheet" href="https://mikey.uk/css/style.css?rnd=1584084688" />
+<link rel="stylesheet" href="https://mikey.uk/css/style.css?rnd=1584084850" />
 
 <meta property="og:title" content="Mocking With Go Interfaces" />
 <meta property="og:description" content="Go&#39;s implicit interfaces provide great flexibility when it comes to testing our applications. By satisfying the expected contract we can create mocks easily to be used within our test cases. For me there are two main approaches I personally take to mocking.
@@ -80,11 +80,11 @@ Lightweight Mocking I call this lightweight as it is less involved than the meth
   <span style="color:#a6e22e">ReturnErr</span> <span style="color:#66d9ef">error</span>
 }
 
-<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#a6e22e">MockAccountHolder</span>) <span style="color:#a6e22e">Deposit</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">amount</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#a6e22e">MockAccountHolder</span>) <span style="color:#a6e22e">Deposit</span>(<span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">_</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">ReturnAmount</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">ReturnErr</span>
 }
 
-<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">MockAccountHolder</span>) <span style="color:#a6e22e">Withdraw</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">amount</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">MockAccountHolder</span>) <span style="color:#a6e22e">Withdraw</span>(<span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">_</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">ReturnAmount</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">ReturnErr</span>
 }
 </code></pre></div><p>We now have a quick mock set up that we can determine the return conditions within and utilise in our tests, usage of the above would look something like this</p>
@@ -119,10 +119,10 @@ Lightweight Mocking I call this lightweight as it is less involved than the meth
     <span style="color:#a6e22e">Test</span>: <span style="color:#e6db74">&#34;Ensure transfer amount cannot exceed withdrawal limit&#34;</span>,
     <span style="color:#a6e22e">TransferAmount</span>: <span style="color:#ae81ff">500</span>,
     <span style="color:#a6e22e">AccountHolder</span>: <span style="color:#a6e22e">MockAccountHolder</span>{
-      <span style="color:#a6e22e">DepositFunc</span>: <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">amount</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
+      <span style="color:#a6e22e">DepositFunc</span>: <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">amount</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
         <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">amount</span>, <span style="color:#66d9ef">nil</span>
       },
-      <span style="color:#a6e22e">WithdrawFunc</span>: <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">amount</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
+      <span style="color:#a6e22e">WithdrawFunc</span>: <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">amount</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
         <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">amount</span> &gt; <span style="color:#ae81ff">250</span> {
           <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;amount is higher than available funds&#34;</span>)
         }
