@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>go on Home</title>
-    <link>https://mikey.uk/tags/go/</link>
-    <description>Home (go)</description>
+    <title>testing on Home</title>
+    <link>https://mikey.uk/tags/testing/</link>
+    <description>Home (testing)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
     <lastBuildDate>Fri, 13 Mar 2020 06:46:39 +0000</lastBuildDate>
     
-    <atom:link href="https://mikey.uk/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://mikey.uk/tags/testing/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -95,95 +95,6 @@
   }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And that is pretty much it. If we were to write out a bunch of tests the more involved approach brings us a higher degree in flexibility in controlling the return paths for our mock. I personally enjoy this second approach more and use it more times than I don&#39;t for testing but ultimately it all depends on your use case.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Behavioural Interfaces</title>
-      <link>https://mikey.uk/posts/behavioural-interfaces/</link>
-      <pubDate>Wed, 11 Mar 2020 06:41:29 +0000</pubDate>
-      
-      <guid>https://mikey.uk/posts/behavioural-interfaces/</guid>
-      <description>&lt;p&gt;When it comes to designing abstractions interfaces are a fundamental tool in a developer&#39;s arsenal. Through my recent ventures into the Go languages I have begun to change my approach to how I use interfaces to a more behavioural approach, for example rather than having an interface to represent a &lt;em&gt;thing&lt;/em&gt; such as an animal or a user, I instead aim to represent the behaviours that those &lt;em&gt;things&lt;/em&gt; can do; walk, talk, login and so on.&lt;/p&gt;
-&lt;p&gt;I said this approach has only become a recent change and that is because of that Go offers &lt;strong&gt;implicit&lt;/strong&gt; interfaces which are perfect for abstracting behaviours as it allows the use lots of slim interfaces with little effort on your part.&lt;/p&gt;
-&lt;p&gt;Lets jump into an example, if we want to represent the behaviours of a human performer. We may say that they can &lt;em&gt;Speak&lt;/em&gt;, &lt;em&gt;Perform&lt;/em&gt; and &lt;em&gt;Walk&lt;/em&gt;. In the old style you might end up creating something like;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;Speak&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;Perform&lt;/span&gt;()
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;Walk&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;distance&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;)
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;But by modelling the interfaces based on a &lt;em&gt;thing&lt;/em&gt; such as a human we are creating unnecessary duplication and tightly linking our behaviours together. If we wanted to create an Animal performer next we would have to duplicate all of the above under a new &lt;code&gt;Animal&lt;/code&gt; interface. That&#39;s not very flexible so instead lets extract the behaviours to slim interfaces.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Speaker&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;Speak&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
-}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Performer&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;Perform&lt;/span&gt;()
-}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Walker&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;Walk&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;distance&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;)
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we have three behavioural interfaces that have no direct link to a human, they could be satisfied by an animal, a fish or something completely different. This reduces duplication of code and gives us a more flexible layer of abstraction.&lt;/p&gt;
-&lt;p&gt;Lets take a look at how that behavioural abstraction gives us more reusable code by considering the following function;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;Perform&lt;/span&gt;() {
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;What kind of shoes do ninjas wear?&amp;#34;&lt;/span&gt;)
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sneakers!&amp;#34;&lt;/span&gt;)
-}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Dog&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;d&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Dog&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;Perform&lt;/span&gt;() {
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;d&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Backflip&lt;/span&gt;()
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then at our point of use we may have&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;package&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;StartAct&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Performer&lt;/span&gt;) {
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Perform&lt;/span&gt;()
-}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;acts&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; []&lt;span style=&#34;color:#a6e22e&#34;&gt;Performer&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;Dog&lt;/span&gt;{}, &lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt;{}}
-  &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;act&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;range&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;acts&lt;/span&gt; {
-    &lt;span style=&#34;color:#a6e22e&#34;&gt;StartAct&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;act&lt;/span&gt;)
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From this we can see that because we focused on the behaviour we have more flexibility in how we can use our implementations. We don&#39;t have to create different stage acts for Humans, Dogs or anything else when in the end they are all just trying to perform.&lt;/p&gt;
-&lt;p&gt;Now at the moment our acts are all just performing so there&#39;s little point in the wrapper function we have for it. What if we wanted to add a welcome message for each act? We want to focus on utilising slim interfaces, ideally with one method, so how do we pass through additional information without having to change our performer interface?&lt;/p&gt;
-&lt;p&gt;This is where type assertions come in beautifully. Take the updated code below (trimmed for brevity)&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ShowNamer&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; {
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;ShowName&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
-}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
-}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;Perform&lt;/span&gt;() { &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt; }
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;ShowName&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; {
-  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;h&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You&#39;ll notice we now have a new interface and the human implements it implicitly. So what does that give us the power to do you may be wondering, we are still only passing a &lt;code&gt;Performer&lt;/code&gt; to our &lt;code&gt;StageAct&lt;/code&gt;. Well thanks to type assertions we can see if our &lt;code&gt;Performer&lt;/code&gt; instance implements any other interfaces that might be useful to us.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;StageAct&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Performer&lt;/span&gt;) {
-  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;n&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;ok&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.(&lt;span style=&#34;color:#a6e22e&#34;&gt;ShowNamer&lt;/span&gt;); &lt;span style=&#34;color:#a6e22e&#34;&gt;ok&lt;/span&gt; {
-    &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Printf&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Welcome to the fabulous act of %s\n&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;n&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ShowName&lt;/span&gt;())
-  }
-  
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Perform&lt;/span&gt;()
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So now we just have to update our main&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
-  &lt;span style=&#34;color:#a6e22e&#34;&gt;acts&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; []&lt;span style=&#34;color:#a6e22e&#34;&gt;Performer&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;Dog&lt;/span&gt;{}, &lt;span style=&#34;color:#a6e22e&#34;&gt;Human&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;Name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Bob the Joker&amp;#34;&lt;/span&gt;}}
-  &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;act&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;range&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;acts&lt;/span&gt; {
-    &lt;span style=&#34;color:#a6e22e&#34;&gt;StartAct&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;act&lt;/span&gt;)
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And that&#39;s it, where our stage act has a show name set our type assertion will kick in and display the name of the performance otherwise we just skip it and let the act get on with their performance.&lt;/p&gt;
-&lt;p&gt;It&#39;s simple and flexibility like this which is a huge draw to the Go langauge for me.&lt;/p&gt;
 </description>
     </item>
     

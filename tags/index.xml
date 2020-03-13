@@ -6,7 +6,7 @@
     <description>Home (Tags)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
-    <lastBuildDate>Wed, 11 Mar 2020 06:41:29 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 13 Mar 2020 06:46:39 +0000</lastBuildDate>
     
     <atom:link href="https://mikey.uk/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>go</title>
       <link>https://mikey.uk/tags/go/</link>
-      <pubDate>Wed, 11 Mar 2020 06:41:29 +0000</pubDate>
+      <pubDate>Fri, 13 Mar 2020 06:46:39 +0000</pubDate>
       
       <guid>https://mikey.uk/tags/go/</guid>
       <description></description>
@@ -23,9 +23,18 @@
     <item>
       <title>software development</title>
       <link>https://mikey.uk/tags/software-development/</link>
-      <pubDate>Wed, 11 Mar 2020 06:41:29 +0000</pubDate>
+      <pubDate>Fri, 13 Mar 2020 06:46:39 +0000</pubDate>
       
       <guid>https://mikey.uk/tags/software-development/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>testing</title>
+      <link>https://mikey.uk/tags/testing/</link>
+      <pubDate>Fri, 13 Mar 2020 06:46:39 +0000</pubDate>
+      
+      <guid>https://mikey.uk/tags/testing/</guid>
       <description></description>
     </item>
     

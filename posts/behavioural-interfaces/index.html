@@ -16,7 +16,7 @@
 <link rel="icon" type="image/x-icon" href="https://mikey.uk/favicon.ico">
 <link rel="apple-touch-icon-precomposed" href="https://mikey.uk/favicon.png">
 
-<link rel="stylesheet" href="https://mikey.uk/css/style.css?rnd=1583911878" />
+<link rel="stylesheet" href="https://mikey.uk/css/style.css?rnd=1584084106" />
 
 <meta property="og:title" content="Behavioural Interfaces" />
 <meta property="og:description" content="When it comes to designing abstractions interfaces are a fundamental tool in a developer&#39;s arsenal. Through my recent ventures into the Go languages I have begun to change my approach to how I use interfaces to a more behavioural approach, for example rather than having an interface to represent a thing such as an animal or a user, I instead aim to represent the behaviours that those things can do; walk, talk, login and so on." />
@@ -130,14 +130,14 @@
 </code></pre></div><p>You'll notice we now have a new interface and the human implements it implicitly. So what does that give us the power to do you may be wondering, we are still only passing a <code>Performer</code> to our <code>StageAct</code>. Well thanks to type assertions we can see if our <code>Performer</code> instance implements any other interfaces that might be useful to us.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">StageAct</span>(<span style="color:#a6e22e">p</span> <span style="color:#a6e22e">Performer</span>) {
   <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">n</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">p</span>.(<span style="color:#a6e22e">ShowNamer</span>); <span style="color:#a6e22e">ok</span> {
-    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Welcome to the fabulous act of %s\n&#34;</span>, <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">Name</span>)
+    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Welcome to the fabulous act of %s\n&#34;</span>, <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">ShowName</span>())
   }
   
   <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">Perform</span>()
 }
 </code></pre></div><p>So now we just have to update our main</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-  <span style="color:#a6e22e">acts</span> <span style="color:#f92672">:=</span> []<span style="color:#a6e22e">Performer</span>{<span style="color:#a6e22e">Dog</span>{}, <span style="color:#a6e22e">Human</span>{<span style="color:#a6e22e">ShowName</span>: <span style="color:#e6db74">&#34;Bob the Joker&#34;</span>}}
+  <span style="color:#a6e22e">acts</span> <span style="color:#f92672">:=</span> []<span style="color:#a6e22e">Performer</span>{<span style="color:#a6e22e">Dog</span>{}, <span style="color:#a6e22e">Human</span>{<span style="color:#a6e22e">Name</span>: <span style="color:#e6db74">&#34;Bob the Joker&#34;</span>}}
   <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">act</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">acts</span> {
     <span style="color:#a6e22e">StartAct</span>(<span style="color:#a6e22e">act</span>)
   }
