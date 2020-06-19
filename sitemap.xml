@@ -4,7 +4,32 @@
   
   <url>
     <loc>https://mikey.uk/</loc>
-    <lastmod>2020-03-13T06:46:39+00:00</lastmod>
+    <lastmod>2020-06-19T08:21:08+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/tags/health/</loc>
+    <lastmod>2020-06-19T08:21:08+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/tags/personal-development/</loc>
+    <lastmod>2020-06-19T08:21:08+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/posts/</loc>
+    <lastmod>2020-06-19T08:21:08+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/tags/</loc>
+    <lastmod>2020-06-19T08:21:08+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikey.uk/posts/the-magic-of-water/</loc>
+    <lastmod>2020-06-19T08:21:08+01:00</lastmod>
   </url>
   
   <url>
@@ -18,17 +43,7 @@
   </url>
   
   <url>
-    <loc>https://mikey.uk/posts/</loc>
-    <lastmod>2020-03-13T06:46:39+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://mikey.uk/tags/software-development/</loc>
-    <lastmod>2020-03-13T06:46:39+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mikey.uk/tags/</loc>
     <lastmod>2020-03-13T06:46:39+00:00</lastmod>
   </url>
   
@@ -49,11 +64,6 @@
   
   <url>
     <loc>https://mikey.uk/posts/five-tips-to-wake-up-earlier/</loc>
-    <lastmod>2019-07-09T14:57:07+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mikey.uk/tags/personal-development/</loc>
     <lastmod>2019-07-09T14:57:07+00:00</lastmod>
   </url>
   
