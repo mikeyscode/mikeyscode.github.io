@@ -6,15 +6,24 @@
     <description>Home (Tags)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
-    <lastBuildDate>Thu, 25 Jun 2020 14:30:16 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 29 Jun 2020 07:11:17 +0100</lastBuildDate>
     
     <atom:link href="https://mikey.uk/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>finance</title>
+      <link>https://mikey.uk/tags/finance/</link>
+      <pubDate>Mon, 29 Jun 2020 07:11:17 +0100</pubDate>
+      
+      <guid>https://mikey.uk/tags/finance/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>personal development</title>
       <link>https://mikey.uk/tags/personal-development/</link>
-      <pubDate>Thu, 25 Jun 2020 14:30:16 +0100</pubDate>
+      <pubDate>Mon, 29 Jun 2020 07:11:17 +0100</pubDate>
       
       <guid>https://mikey.uk/tags/personal-development/</guid>
       <description></description>
